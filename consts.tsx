@@ -81,24 +81,24 @@ export const lineOptions = {
 
 export const defaultPromptParts = {
   '2D Bounding Boxes': [
-    'Show me the locations of',
+    'Show me the locations of ',
     'all objects',
-    'as a JSON list. Do not return masks. Maximum of 25 items.',
+    ' as a JSON list. Do not return masks. 25 items max.',
   ],
   'Segmentation Masks': [
     `Give me the segmentation masks for `,
     'all objects',
-    `. Output a JSON list of segmentation masks where each entry has the 2d bounding box in the key "box_2d", the segmentation mask in the key "mask", and the text label in the key "label". Use descriptive labels.`,
+    `. Output a JSON list of segmentation masks where each entry has the 2d bounding box in the "box_2d" key, the segmentation mask in the "mask" key, and the text label in the "label" key. Use descriptive labels.`,
   ],
   '3D Bounding Boxes': [
-    'Output in JSON. Detect the 3d bounding boxes for the ',
+    'Output in JSON. Detect the 3d bounding boxes of ',
     'all objects',
     ', output no more than 10 items. Return a list where each entry has the object name in "label" and its 3d bounding box in "box_3d".',
   ],
   Points: [
-    'Point to the',
+    'Point to ',
     'all objects',
-    ' with no more than 10 items. The answer must follow the JSON format: [{"point": <point>, "label": <label1>}, ...]. The points are in [y, x] format normalized to 0-1000.',
+    ' with no more than 10 items. The answer should follow the JSON format: [{"point": <point>, "label": <label1>}, ...]. The points are in [y, x] format normalized to 0-1000.',
   ],
 };
 

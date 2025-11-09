@@ -40,7 +40,7 @@ import {lineOptions} from './consts';
 import {DetectTypes} from './Types';
 import {getSvgPathFromStroke, loadImage} from './utils';
 
-const ai = new GoogleGenAI({apiKey: process.env.GEMINI_API_KEY});
+const ai = new GoogleGenAI({apiKey: process.env.API_KEY});
 
 export function Prompt() {
   const [accuracy, setAccuracy] = useAtom(AccuracyAtom);
@@ -126,15 +126,17 @@ export function Prompt() {
       // Map accuracy (0-100) to temperature (2.0-0.0)
       const temperature = 2.0 - (accuracy / 100) * 2.0;
 
+      const modelToUse =
+        model === 'Gemini 2.5 Pro' ? 'gemini-2.5-pro' : 'gemini-2.5-flash';
+
       const config: {
         temperature: number;
+        responseMimeType?: string;
         thinkingConfig?: {thinkingBudget: number};
       } = {
         temperature,
+        responseMimeType: 'application/json',
       };
-
-      const modelToUse =
-        model === 'Gemini 2.5 Pro' ? 'gemini-2.5-pro' : 'gemini-2.5-flash';
 
       if (modelToUse === 'gemini-2.5-flash') {
         // Disable thinking for 2.5 Flash, as recommended for spatial
@@ -151,114 +153,117 @@ export function Prompt() {
         textPromptToSend = prompts[detectType].join(' ');
       }
 
-      let response = (
+      const responseText = (
         await ai.models.generateContent({
           model: modelToUse,
-          contents: [
-            {
-              role: 'user',
-              parts: [
-                {
-                  inlineData: {
-                    data: activeDataURL.replace('data:image/png;base64,', ''),
-                    mimeType: 'image/png',
-                  },
+          contents: {
+            role: 'user',
+            parts: [
+              {
+                inlineData: {
+                  data: activeDataURL.replace('data:image/png;base64,', ''),
+                  mimeType: 'image/png',
                 },
-                {text: textPromptToSend},
-              ],
-            },
-          ],
+              },
+              {text: textPromptToSend},
+            ],
+          },
           config,
         })
       ).text;
 
-      if (response.includes('```json')) {
-        response = response.split('```json')[1].split('```')[0];
+      try {
+        const parsedResponse = JSON.parse(responseText);
+        if (detectType === '2D Bounding Boxes') {
+          const formattedBoxes = parsedResponse.map(
+            (box: {box_2d: [number, number, number, number]; label: string}) => {
+              const [ymin, xmin, ymax, xmax] = box.box_2d;
+              return {
+                x: xmin / 1000,
+                y: ymin / 1000,
+                width: (xmax - xmin) / 1000,
+                height: (ymax - ymin) / 1000,
+                label: box.label,
+              };
+            },
+          );
+          setHoverEntered(false);
+          setBoundingBoxes2D(formattedBoxes);
+        } else if (detectType === 'Points') {
+          const formattedPoints = parsedResponse.map(
+            (point: {point: [number, number]; label: string}) => {
+              return {
+                point: {
+                  x: point.point[1] / 1000,
+                  y: point.point[0] / 1000,
+                },
+                label: point.label,
+              };
+            },
+          );
+          setPoints(formattedPoints);
+        } else if (detectType === 'Segmentation Masks') {
+          const formattedBoxes = parsedResponse.map(
+            (box: {
+              box_2d: [number, number, number, number];
+              label: string;
+              mask: ImageData;
+            }) => {
+              const [ymin, xmin, ymax, xmax] = box.box_2d;
+              return {
+                x: xmin / 1000,
+                y: ymin / 1000,
+                width: (xmax - xmin) / 1000,
+                height: (ymax - ymin) / 1000,
+                label: box.label,
+                imageData: box.mask,
+              };
+            },
+          );
+          setHoverEntered(false);
+          // sort largest to smallest
+          const sortedBoxes = formattedBoxes.sort(
+            (a: any, b: any) => b.width * b.height - a.width * a.height,
+          );
+          setBoundingBoxMasks(sortedBoxes);
+        } else {
+          const formattedBoxes = parsedResponse.map(
+            (box: {
+              box_3d: [
+                number,
+                number,
+                number,
+                number,
+                number,
+                number,
+                number,
+                number,
+                number,
+              ];
+              label: string;
+            }) => {
+              const center = box.box_3d.slice(0, 3);
+              const size = box.box_3d.slice(3, 6);
+              const rpy = box.box_3d
+                .slice(6)
+                .map((x: number) => (x * Math.PI) / 180);
+              return {
+                center,
+                size,
+                rpy,
+                label: box.label,
+              };
+            },
+          );
+          setBoundingBoxes3D(formattedBoxes);
+        }
+      } catch (e) {
+        console.error('Failed to parse JSON response:', e, responseText);
+        alert("Could not understand the model's response. Please try again.");
       }
-      const parsedResponse = JSON.parse(response);
-      if (detectType === '2D Bounding Boxes') {
-        const formattedBoxes = parsedResponse.map(
-          (box: {box_2d: [number, number, number, number]; label: string}) => {
-            const [ymin, xmin, ymax, xmax] = box.box_2d;
-            return {
-              x: xmin / 1000,
-              y: ymin / 1000,
-              width: (xmax - xmin) / 1000,
-              height: (ymax - ymin) / 1000,
-              label: box.label,
-            };
-          },
-        );
-        setHoverEntered(false);
-        setBoundingBoxes2D(formattedBoxes);
-      } else if (detectType === 'Points') {
-        const formattedPoints = parsedResponse.map(
-          (point: {point: [number, number]; label: string}) => {
-            return {
-              point: {
-                x: point.point[1] / 1000,
-                y: point.point[0] / 1000,
-              },
-              label: point.label,
-            };
-          },
-        );
-        setPoints(formattedPoints);
-      } else if (detectType === 'Segmentation Masks') {
-        const formattedBoxes = parsedResponse.map(
-          (box: {
-            box_2d: [number, number, number, number];
-            label: string;
-            mask: ImageData;
-          }) => {
-            const [ymin, xmin, ymax, xmax] = box.box_2d;
-            return {
-              x: xmin / 1000,
-              y: ymin / 1000,
-              width: (xmax - xmin) / 1000,
-              height: (ymax - ymin) / 1000,
-              label: box.label,
-              imageData: box.mask,
-            };
-          },
-        );
-        setHoverEntered(false);
-        // sort largest to smallest
-        const sortedBoxes = formattedBoxes.sort(
-          (a: any, b: any) => b.width * b.height - a.width * a.height,
-        );
-        setBoundingBoxMasks(sortedBoxes);
-      } else {
-        const formattedBoxes = parsedResponse.map(
-          (box: {
-            box_3d: [
-              number,
-              number,
-              number,
-              number,
-              number,
-              number,
-              number,
-              number,
-              number,
-            ];
-            label: string;
-          }) => {
-            const center = box.box_3d.slice(0, 3);
-            const size = box.box_3d.slice(3, 6);
-            const rpy = box.box_3d
-              .slice(6)
-              .map((x: number) => (x * Math.PI) / 180);
-            return {
-              center,
-              size,
-              rpy,
-              label: box.label,
-            };
-          },
-        );
-        setBoundingBoxes3D(formattedBoxes);
-      }
+    } catch (e) {
+      console.error('API call failed:', e);
+      alert('An error occurred during analysis. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -307,7 +312,7 @@ export function Prompt() {
             <>
               <svg
                 className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                xmlns="http://www.w3.org/2000/svg"
+                xmlns="http://www.w.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24">
                 <circle

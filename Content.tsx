@@ -19,7 +19,6 @@
 
 import {useAtom} from 'jotai';
 import getStroke from 'perfect-freehand';
-// FIX: Import PointerEvent from react.
 import {PointerEvent, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {ResizePayload, useResizeDetector} from 'react-resize-detector';
 import {
@@ -250,7 +249,6 @@ export function Content() {
     return [allLines, allLabels] as const;
   }, [boundingBoxes3D, boundingBoxContainer, fov]);
 
-  // FIX: Use PointerEvent type from react.
   function setHoveredBox(e: PointerEvent) {
     const boxes = document.querySelectorAll('.bbox');
     const dimensionsAndIndex = Array.from(boxes).map((box, i) => {
@@ -545,7 +543,7 @@ function BoxMask({
         };
       }
     }
-  }, [canvasRef, box.imageData]);
+  }, [canvasRef, box.imageData, rgb]);
 
   return (
     <canvas

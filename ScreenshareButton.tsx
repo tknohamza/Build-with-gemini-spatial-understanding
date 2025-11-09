@@ -27,7 +27,7 @@ export function ScreenshareButton() {
 
   return (
     <button
-      className="button flex gap-3 justify-center items-center"
+      className="button secondary flex gap-3 items-center whitespace-nowrap"
       onClick={() => {
         resetState();
         navigator.mediaDevices.getDisplayMedia({video: true}).then((stream) => {

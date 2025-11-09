@@ -50,8 +50,9 @@ export function ExtraModeControls() {
     <>
       {detectType === '3D Bounding Boxes' ? (
         <div className="flex gap-3 px-3 py-3 items-center justify-center bg-[var(--accent-color)] text-[var(--bg-color)] text-center border-t">
-          <div className="text-lg">🚧</div> 3D bounding boxes are a prototype
-          capability. Use 2D bounding boxes for higher accuracy.
+          <div className="text-lg">🚧</div>
+          3D Bounding Boxes is a prototype capability. Use 2D Bounding Boxes for
+          higher accuracy.
         </div>
       ) : null}
       {drawMode ? (

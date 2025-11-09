@@ -29,6 +29,7 @@ import {
 } from './atoms';
 import {ExampleImages} from './ExampleImages';
 import {useResetState} from './hooks';
+import {ScreenshareButton} from './ScreenshareButton';
 
 export function TopBar() {
   const resetState = useResetState();
@@ -47,11 +48,22 @@ export function TopBar() {
           onClick={() => {
             resetState();
           }}
-          className="!p-0 !border-none underline bg-transparent whitespace-nowrap"
-          style={{
-            minHeight: '0',
-          }}>
-          <div>Reset session</div>
+          className="w-8 h-8 flex items-center justify-center rounded-full border border-[var(--border-color)] hover:border-[var(--accent-color)]"
+          aria-label="Reset session"
+          title="Reset session">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round">
+            <path d="M21 2v6h-6" />
+            <path d="M3 12a9 9 0 1 1 9 9 9.75 9.75 0 0 1-6.74-2.74L3 14" />
+          </svg>
         </button>
         <label className="flex items-center button secondary whitespace-nowrap">
           <input
@@ -75,6 +87,7 @@ export function TopBar() {
           />
           <div>Upload Image</div>
         </label>
+        <ScreenshareButton />
         <ExampleImages />
       </div>
       <div className="flex gap-3 items-center">
