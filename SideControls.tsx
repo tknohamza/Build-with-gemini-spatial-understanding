@@ -58,7 +58,7 @@ export function SideControls() {
             }
           }}
         />
-        <div>Upload an image</div>
+        <div>Upload Image</div>
       </label>
       <div className="hidden">
         <button
@@ -67,7 +67,7 @@ export function SideControls() {
             setDrawMode(!drawMode);
           }}>
           <div className="text-lg"> 🎨</div>
-          <div>Draw on image</div>
+          <div>Draw on Image</div>
         </button>
         <ScreenshareButton />
       </div>

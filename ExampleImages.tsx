@@ -27,11 +27,11 @@ export function ExampleImages() {
   const [, setIsUploadedImage] = useAtom(IsUploadedImageAtom);
   const resetState = useResetState();
   return (
-    <div className="flex flex-wrap items-start gap-3 shrink-0 w-[190px]">
+    <div className="flex flex-row items-center gap-3">
       {imageOptions.map((image) => (
         <button
           key={image}
-          className="p-0 w-[56px] h-[56px] relative overflow-hidden"
+          className="p-0 w-[32px] h-[32px] relative overflow-hidden shrink-0"
           onClick={() => {
             setIsUploadedImage(false);
             setImageSrc(image);

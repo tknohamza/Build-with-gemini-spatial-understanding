@@ -80,32 +80,32 @@ export const lineOptions = {
 };
 
 export const defaultPromptParts = {
-  '2D bounding boxes': [
-    'Show me the positions of',
-    'items',
-    'as a JSON list. Do not return masks. Limit to 25 items.',
-  ],
-  'Segmentation masks': [
-    `Give the segmentation masks for`,
+  '2D Bounding Boxes': [
+    'Show me the locations of',
     'all objects',
-    `. Output a JSON list of segmentation masks where each entry contains the 2D bounding box in the key "box_2d", the segmentation mask in key "mask", and the text label in the key "label". Use descriptive labels.`,
+    'as a JSON list. Do not return masks. Maximum of 25 items.',
   ],
-  '3D bounding boxes': [
-    'Output in json. Detect the 3D bounding boxes of ',
-    'items',
-    ', output no more than 10 items. Return a list where each entry contains the object name in "label" and its 3D bounding box in "box_3d".',
+  'Segmentation Masks': [
+    `Give me the segmentation masks for `,
+    'all objects',
+    `. Output a JSON list of segmentation masks where each entry has the 2d bounding box in the key "box_2d", the segmentation mask in the key "mask", and the text label in the key "label". Use descriptive labels.`,
+  ],
+  '3D Bounding Boxes': [
+    'Output in JSON. Detect the 3d bounding boxes for the ',
+    'all objects',
+    ', output no more than 10 items. Return a list where each entry has the object name in "label" and its 3d bounding box in "box_3d".',
   ],
   Points: [
     'Point to the',
-    'items',
-    ' with no more than 10 items. The answer should follow the json format: [{"point": <point>, "label": <label1>}, ...]. The points are in [y, x] format normalized to 0-1000.',
+    'all objects',
+    ' with no more than 10 items. The answer must follow the JSON format: [{"point": <point>, "label": <label1>}, ...]. The points are in [y, x] format normalized to 0-1000.',
   ],
 };
 
 export const defaultPrompts = {
-  '2D bounding boxes': defaultPromptParts['2D bounding boxes'].join(' '),
-  '3D bounding boxes': defaultPromptParts['3D bounding boxes'].join(' '),
-  'Segmentation masks': defaultPromptParts['Segmentation masks'].join(''),
+  '2D Bounding Boxes': defaultPromptParts['2D Bounding Boxes'].join(' '),
+  '3D Bounding Boxes': defaultPromptParts['3D Bounding Boxes'].join(' '),
+  'Segmentation Masks': defaultPromptParts['Segmentation Masks'].join(''),
   Points: defaultPromptParts.Points.join(' '),
 };
 

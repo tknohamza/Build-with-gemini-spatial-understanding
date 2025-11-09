@@ -64,13 +64,14 @@ export const PointsAtom = atom<PointingType[]>([]);
 
 // export const PromptAtom = atom<string>("main objects");
 
-export const TemperatureAtom = atom<number>(0.5);
+export const AccuracyAtom = atom<number>(75);
+export const ModelAtom = atom<string>('Gemini 2.5 Flash');
 
 export const ShareStream = atom<MediaStream | null>(null);
 
 export const DrawModeAtom = atom<boolean>(false);
 
-export const DetectTypeAtom = atom<DetectTypes>('2D bounding boxes');
+export const DetectTypeAtom = atom<DetectTypes>('2D Bounding Boxes');
 
 export const LinesAtom = atom<[[number, number][], string][]>([]);
 

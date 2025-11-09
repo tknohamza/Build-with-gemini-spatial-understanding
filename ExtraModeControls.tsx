@@ -44,14 +44,14 @@ export function ExtraModeControls() {
   const [drawMode, setDrawMode] = useAtom(DrawModeAtom);
   const [, setLines] = useAtom(LinesAtom);
 
-  const showExtraBar = stream || detectType === '3D bounding boxes';
+  const showExtraBar = stream || detectType === '3D Bounding Boxes';
 
   return (
     <>
-      {detectType === '3D bounding boxes' ? (
+      {detectType === '3D Bounding Boxes' ? (
         <div className="flex gap-3 px-3 py-3 items-center justify-center bg-[var(--accent-color)] text-[var(--bg-color)] text-center border-t">
-          <div className="text-lg">🚧</div> 3d bounding boxes is a preliminary
-          model capability. Use 2D bounding boxes for higher accuracy.
+          <div className="text-lg">🚧</div> 3D bounding boxes are a prototype
+          capability. Use 2D bounding boxes for higher accuracy.
         </div>
       ) : null}
       {drawMode ? (
@@ -98,12 +98,12 @@ export function ExtraModeControls() {
                 setPoints([]);
               }}>
               <div className="text-xs">🔴</div>
-              <div className="whitespace-nowrap">Stop screenshare</div>
+              <div className="whitespace-nowrap">Stop Screenshare</div>
             </button>
           ) : null}
-          {detectType === '3D bounding boxes' ? (
+          {detectType === '3D Bounding Boxes' ? (
             <>
-              <div>FOV</div>
+              <div>FoV</div>
               <input
                 className="w-full"
                 type="range"

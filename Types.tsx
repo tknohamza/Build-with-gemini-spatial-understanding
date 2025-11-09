@@ -18,9 +18,9 @@
 // limitations under the License.
 
 export type DetectTypes =
-  | '2D bounding boxes'
-  | 'Segmentation masks'
-  | '3D bounding boxes'
+  | '2D Bounding Boxes'
+  | 'Segmentation Masks'
+  | '3D Bounding Boxes'
   | 'Points';
 
 export type BoundingBox2DType = {

@@ -18,7 +18,16 @@
 // limitations under the License.
 
 import {useAtom} from 'jotai';
-import {DetectTypeAtom, HoverEnteredAtom, RevealOnHoverModeAtom} from './atoms';
+import {
+  BumpSessionAtom,
+  DetectTypeAtom,
+  HoverEnteredAtom,
+  ImageSentAtom,
+  ImageSrcAtom,
+  IsUploadedImageAtom,
+  RevealOnHoverModeAtom,
+} from './atoms';
+import {ExampleImages} from './ExampleImages';
 import {useResetState} from './hooks';
 
 export function TopBar() {
@@ -26,24 +35,51 @@ export function TopBar() {
   const [revealOnHover, setRevealOnHoverMode] = useAtom(RevealOnHoverModeAtom);
   const [detectType] = useAtom(DetectTypeAtom);
   const [, setHoverEntered] = useAtom(HoverEnteredAtom);
+  const [, setImageSrc] = useAtom(ImageSrcAtom);
+  const [, setIsUploadedImage] = useAtom(IsUploadedImageAtom);
+  const [, setImageSent] = useAtom(ImageSentAtom);
+  const [, setBumpSession] = useAtom(BumpSessionAtom);
 
   return (
-    <div className="flex w-full items-center px-3 py-2 border-b justify-between">
+    <div className="flex w-full items-center px-3 py-2 border-b justify-between gap-6">
       <div className="flex gap-3 items-center">
         <button
           onClick={() => {
             resetState();
           }}
-          className="!p-0 !border-none underline bg-transparent"
+          className="!p-0 !border-none underline bg-transparent whitespace-nowrap"
           style={{
             minHeight: '0',
           }}>
           <div>Reset session</div>
         </button>
+        <label className="flex items-center button secondary whitespace-nowrap">
+          <input
+            className="hidden"
+            type="file"
+            accept=".jpg, .jpeg, .png, .webp"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                  resetState();
+                  setImageSrc(e.target?.result as string);
+                  setIsUploadedImage(true);
+                  setImageSent(false);
+                  setBumpSession((prev) => prev + 1);
+                };
+                reader.readAsDataURL(file);
+              }
+            }}
+          />
+          <div>Upload Image</div>
+        </label>
+        <ExampleImages />
       </div>
       <div className="flex gap-3 items-center">
-        {detectType === '2D bounding boxes' ||
-        detectType === 'Segmentation masks' ? (
+        {detectType === '2D Bounding Boxes' ||
+        detectType === 'Segmentation Masks' ? (
           <div>
             <label className="flex items-center gap-2 px-3 select-none whitespace-nowrap">
               <input
@@ -56,7 +92,7 @@ export function TopBar() {
                   setRevealOnHoverMode(e.target.checked);
                 }}
               />
-              <div>reveal on hover</div>
+              <div>Reveal on hover</div>
             </label>
           </div>
         ) : null}

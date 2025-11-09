@@ -19,7 +19,8 @@
 
 import {useAtom} from 'jotai';
 import getStroke from 'perfect-freehand';
-import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+// FIX: Import PointerEvent from react.
+import {PointerEvent, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {ResizePayload, useResizeDetector} from 'react-resize-detector';
 import {
   ActiveColorAtom,
@@ -249,7 +250,8 @@ export function Content() {
     return [allLines, allLabels] as const;
   }, [boundingBoxes3D, boundingBoxContainer, fov]);
 
-  function setHoveredBox(e: React.PointerEvent) {
+  // FIX: Use PointerEvent type from react.
+  function setHoveredBox(e: PointerEvent) {
     const boxes = document.querySelectorAll('.bbox');
     const dimensionsAndIndex = Array.from(boxes).map((box, i) => {
       const {top, left, width, height} = box.getBoundingClientRect();
@@ -415,7 +417,7 @@ export function Content() {
             ))}
           </svg>
         )}
-        {detectType === '2D bounding boxes' &&
+        {detectType === '2D Bounding Boxes' &&
           boundingBoxes2D.map((box, i) => (
             <div
               key={i}
@@ -432,7 +434,7 @@ export function Content() {
               </div>
             </div>
           ))}
-        {detectType === 'Segmentation masks' &&
+        {detectType === 'Segmentation Masks' &&
           boundingBoxMasks.map((box, i) => (
             <div
               key={i}
@@ -470,7 +472,7 @@ export function Content() {
               </div>
             );
           })}
-        {detectType === '3D bounding boxes' && linesAndLabels3D ? (
+        {detectType === '3D Bounding Boxes' && linesAndLabels3D ? (
           <>
             {linesAndLabels3D[0].map((line, i) => (
               <div

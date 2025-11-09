@@ -21,25 +21,38 @@ import {useAtom} from 'jotai';
 import {DetectTypeAtom, HoverEnteredAtom} from './atoms';
 import {DetectTypes} from './Types';
 
+const typeLabels: Record<DetectTypes, string> = {
+  '2D Bounding Boxes': '2D Bounding Boxes',
+  'Segmentation Masks': 'Segmentation Masks',
+  Points: 'Points',
+  '3D Bounding Boxes': '3D Bounding Boxes',
+};
+
 export function DetectTypeSelector() {
   return (
     <div className="flex flex-col flex-shrink-0">
       <div className="mb-3 uppercase">Give me:</div>
+      {/* FIX: Unroll map to avoid key prop issue with custom component. */}
       <div className="flex flex-col gap-3">
-        {[
-          '2D bounding boxes',
-          'Segmentation masks',
-          'Points',
-          '3D bounding boxes',
-        ].map((label) => (
-          <SelectOption key={label} label={label} />
-        ))}
+        <SelectOption
+          label="2D Bounding Boxes"
+          text={typeLabels['2D Bounding Boxes']}
+        />
+        <SelectOption
+          label="Segmentation Masks"
+          text={typeLabels['Segmentation Masks']}
+        />
+        <SelectOption label="Points" text={typeLabels['Points']} />
+        <SelectOption
+          label="3D Bounding Boxes"
+          text={typeLabels['3D Bounding Boxes']}
+        />
       </div>
     </div>
   );
 }
 
-function SelectOption({label}: {label: string}) {
+function SelectOption({label, text}: {label: DetectTypes; text: string}) {
   const [detectType, setDetectType] = useAtom(DetectTypeAtom);
   const [, setHoverEntered] = useAtom(HoverEnteredAtom);
   // const resetState = useResetState();
@@ -54,9 +67,9 @@ function SelectOption({label}: {label: string}) {
       }}
       onClick={() => {
         setHoverEntered(false);
-        setDetectType(label as DetectTypes);
+        setDetectType(label);
       }}>
-      {label}
+      {text}
     </button>
   );
 }

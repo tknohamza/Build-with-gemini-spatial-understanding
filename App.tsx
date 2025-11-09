@@ -21,10 +21,8 @@ import {useAtom} from 'jotai';
 import {useEffect} from 'react';
 import {Content} from './Content';
 import {DetectTypeSelector} from './DetectTypeSelector';
-import {ExampleImages} from './ExampleImages';
 import {ExtraModeControls} from './ExtraModeControls';
 import {Prompt} from './Prompt';
-import {SideControls} from './SideControls';
 import {TopBar} from './TopBar';
 import {DetectTypes} from './Types';
 import {
@@ -56,16 +54,16 @@ function App() {
       let newDetectType: DetectTypes | null = null;
       switch (taskParam) {
         case '2d-bounding-boxes':
-          newDetectType = '2D bounding boxes';
+          newDetectType = '2D Bounding Boxes';
           break;
         case 'segmentation-masks':
-          newDetectType = 'Segmentation masks';
+          newDetectType = 'Segmentation Masks';
           break;
         case 'points':
           newDetectType = 'Points';
           break;
         case '3d-bounding-boxes':
-          newDetectType = '3D bounding boxes';
+          newDetectType = '3D Bounding Boxes';
           break;
         default:
           console.warn(`Unknown task parameter in URL hash: ${taskParam}`);
@@ -84,10 +82,6 @@ function App() {
         <ExtraModeControls />
       </div>
       <div className="flex shrink-0 w-full overflow-auto py-6 px-5 gap-6 lg:items-start">
-        <div className="flex flex-col lg:flex-col gap-6 items-center border-r pr-5">
-          <ExampleImages />
-          <SideControls />
-        </div>
         <div className="flex flex-row gap-6 grow">
           <DetectTypeSelector />
           <Prompt />
