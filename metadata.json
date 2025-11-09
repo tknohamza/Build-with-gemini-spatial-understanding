@@ -1,0 +1,5 @@
+{
+  "name": "Copy of Spatial Understanding v0.0.1 beta (@tknohamza)",
+  "description": "Detect the precise 2D/3D location of objects in any image or live screenshare.",
+  "requestFramePermissions": []
+}

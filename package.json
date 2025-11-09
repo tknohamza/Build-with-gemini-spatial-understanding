@@ -1,0 +1,26 @@
+{
+  "name": "copy-of-spatial-understanding-v0.0.1-beta-(@tknohamza)",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@google/genai": "^0.7.0",
+    "@tailwindcss/browser": "^4.0.17",
+    "jotai": "^2.10.0",
+    "perfect-freehand": "^1.2.2",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-resize-detector": "^12.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "typescript": "~5.8.2",
+    "vite": "^6.2.0"
+  }
+}
